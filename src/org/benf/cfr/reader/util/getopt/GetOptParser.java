@@ -3,8 +3,6 @@ package org.benf.cfr.reader.util.getopt;
 import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
 import org.benf.cfr.reader.util.collections.ListFactory;
 import org.benf.cfr.reader.util.collections.MapFactory;
-import org.benf.cfr.reader.util.CfrVersionInfo;
-import org.benf.cfr.reader.util.MiscConstants;
 
 import java.util.*;
 
@@ -101,7 +99,7 @@ public class GetOptParser {
     }
 
     private static void printErrHeader() {
-        System.err.println("CFR " + CfrVersionInfo.VERSION_INFO + "\n");
+        System.err.println("CFR " + "\n");
     }
 
     private static void printUsage() {

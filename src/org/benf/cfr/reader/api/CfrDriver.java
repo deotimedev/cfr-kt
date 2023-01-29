@@ -1,11 +1,13 @@
 package org.benf.cfr.reader.api;
 
 import org.benf.cfr.reader.CfrDriverImpl;
+import org.benf.cfr.reader.entities.ClassFile;
 import org.benf.cfr.reader.util.getopt.Options;
 import org.benf.cfr.reader.util.getopt.OptionsImpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Main driver for CFR API.   Instance of this driver should be constructed by using
@@ -18,7 +20,7 @@ public interface CfrDriver {
      *
      * @param toAnalyse list of class file FQN / path of jar / path of class file
      */
-    void analyse(List<String> toAnalyse);
+    Optional<ClassFile> analyse(String toAnalyse);
 
     /**
      * Builder for {@link CfrDriver}

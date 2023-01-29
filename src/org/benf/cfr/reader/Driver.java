@@ -12,7 +12,6 @@ import org.benf.cfr.reader.state.TypeUsageCollectingDumper;
 import org.benf.cfr.reader.state.TypeUsageInformation;
 import org.benf.cfr.reader.util.AnalysisType;
 import org.benf.cfr.reader.util.CannotLoadClassException;
-import org.benf.cfr.reader.util.CfrVersionInfo;
 import org.benf.cfr.reader.util.MiscConstants;
 import org.benf.cfr.reader.util.MiscUtils;
 import org.benf.cfr.reader.util.collections.Functional;
@@ -34,6 +33,7 @@ import org.benf.cfr.reader.util.output.ToStringDumper;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 class Driver {
@@ -49,18 +49,16 @@ class Driver {
      *   mandates file names match declared names, but absolutely could happen when analysing randomly named class
      *   files in a junk directory.
      */
-    static void doClass(DCCommonState dcCommonState, String path, boolean skipInnerClass, DumperFactory dumperFactory) {
+    static Optional<ClassFile> doClass(DCCommonState dcCommonState, String path, boolean skipInnerClass, DumperFactory dumperFactory) {
         Options options = dcCommonState.getOptions();
         ObfuscationMapping mapping = MappingFactory.get(options, dcCommonState);
         dcCommonState = new DCCommonState(dcCommonState, mapping);
 
-        IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory.get(options);
-        Dumper d = new ToStringDumper(); // sentinel dumper.
         ExceptionDumper ed = dumperFactory.getExceptionDumper();
         try {
             SummaryDumper summaryDumper = new NopSummaryDumper();
             ClassFile c = dcCommonState.getClassFileMaybePath(path);
-            if (skipInnerClass && c.isInnerClass()) return;
+            if (skipInnerClass && c.isInnerClass()) return Optional.empty();
 
             dcCommonState.configureWith(c);
             dumperFactory.getProgressDumper().analysingType(c.getClassType());
@@ -83,31 +81,11 @@ class Driver {
             TypeUsageCollectingDumper collectingDumper = new TypeUsageCollectingDumper(options, c);
             c.analyseTop(dcCommonState, collectingDumper);
 
-            TypeUsageInformation typeUsageInformation = collectingDumper.getRealTypeUsageInformation();
 
-            d = dumperFactory.getNewTopLevelDumper(c.getClassType(), summaryDumper, typeUsageInformation, illegalIdentifierDump);
-            d = dcCommonState.getObfuscationMapping().wrap(d);
-            if (options.getOption(OptionsImpl.TRACK_BYTECODE_LOC)) {
-                d = dumperFactory.wrapLineNoDumper(d);
-            }
-
-            String methname = options.getOption(OptionsImpl.METHODNAME);
-            if (methname == null) {
-                c.dump(d);
-            } else {
-                try {
-                    for (Method method : c.getMethodByName(methname)) {
-                        method.dump(d, true);
-                    }
-                } catch (NoSuchMethodException e) {
-                    throw new IllegalArgumentException("No such method '" + methname + "'.");
-                }
-            }
-            d.print("");
+            return Optional.of(c);
         } catch (Exception e) {
             ed.noteException(path, null, e);
-        } finally {
-            if (d != null) d.close();
+            return Optional.empty();
         }
     }
 
@@ -122,7 +100,6 @@ class Driver {
             ProgressDumper progressDumper = dumperFactory.getProgressDumper();
             summaryDumper = dumperFactory.getSummaryDumper();
             summaryDumper.notify("Summary for " + path);
-            summaryDumper.notify(MiscConstants.CFR_HEADER_BRA + " " + CfrVersionInfo.VERSION_INFO);
             progressDumper.analysingPath(path);
             Map<Integer, List<JavaTypeInstance>> clstypes = dcCommonState.explicitlyLoadJar(path, analysisType);
             Set<JavaTypeInstance> versionCollisions = getVersionCollisions(clstypes);

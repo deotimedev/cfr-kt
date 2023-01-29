@@ -112,7 +112,7 @@ public class PluginRunner {
         try {
             StringBuilder output = new StringBuilder();
             DumperFactory dumperFactory = new PluginDumperFactory(output, dcCommonState.getOptions());
-            Main.doClass(dcCommonState, classFilePath, false, dumperFactory);
+//            Main.doClass(dcCommonState, classFilePath, false, dumperFactory);
             return output.toString();
         } catch (Exception e) {
             return e.toString();
