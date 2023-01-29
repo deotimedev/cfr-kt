@@ -58,6 +58,10 @@ public class StructuredCatch extends AbstractStructuredStatement {
         return catchBlock;
     }
 
+    public LValue getCatching() {
+        return catching;
+    }
+
     @Override
     public Dumper dump(Dumper dumper) {
         boolean first = true;
