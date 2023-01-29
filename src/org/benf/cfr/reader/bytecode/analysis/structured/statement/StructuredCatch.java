@@ -54,6 +54,10 @@ public class StructuredCatch extends AbstractStructuredStatement {
         return catchTypes;
     }
 
+    public Op04StructuredStatement getCatchBlock() {
+        return catchBlock;
+    }
+
     @Override
     public Dumper dump(Dumper dumper) {
         boolean first = true;
