@@ -936,7 +936,10 @@ public class CodeAnalyser {
             Op04StructuredStatement.rewriteNarrowingAssignments(options, method, block);
 
             // Tidy variable names
-            Op04StructuredStatement.tidyVariableNames(method, block, bytecodeMeta, comments, cp.getClassCache());
+            if (options.getOption(OptionsImpl.TIDY_VARIABLE_NAMES)) {
+                Op04StructuredStatement.tidyVariableNames(method, block, bytecodeMeta, comments, cp.getClassCache());
+            }
+
 
             Op04StructuredStatement.tidyObfuscation(options, block);
 
@@ -944,7 +947,7 @@ public class CodeAnalyser {
 
 
             /*
-             * Now finally run some extra checks to spot wierdness.
+             * Now finally run some extra checks to spot weirdness.
              */
             Op04StructuredStatement.applyChecker(new LooseCatchChecker(), block, comments);
             Op04StructuredStatement.applyChecker(new VoidVariableChecker(), block, comments);

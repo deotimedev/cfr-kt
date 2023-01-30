@@ -337,6 +337,9 @@ public class OptionsImpl implements Options {
     public static final PermittedOptionProvider.Argument<Boolean> HIDE_LONGSTRINGS = register(new PermittedOptionProvider.Argument<Boolean>(
             "hidelongstrings", defaultFalseBooleanDecoder,
             "Hide very long strings - useful if obfuscators have placed fake code in strings"));
+        public static final PermittedOptionProvider.Argument<Boolean> TIDY_VARIABLE_NAMES = register(new PermittedOptionProvider.Argument<Boolean>(
+            "tidyvariablenames", defaultFalseBooleanDecoder,
+            "If variable names should be guessed if they appear malformed"));
     public static final PermittedOptionProvider.Argument<Boolean> REMOVE_BOILERPLATE = register(new PermittedOptionProvider.Argument<Boolean>(
             "removeboilerplate", defaultTrueBooleanDecoder,
             "Remove boilderplate functions - constructor boilerplate, lambda deserialisation etc."));
