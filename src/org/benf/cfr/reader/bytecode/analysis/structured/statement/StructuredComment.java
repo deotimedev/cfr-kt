@@ -68,4 +68,8 @@ public class StructuredComment extends AbstractStructuredStatement {
     public boolean isEffectivelyNOP() {
         return true;
     }
+
+    public Expression getExpression() {
+        return expression;
+    }
 }
