@@ -139,4 +139,8 @@ public class NotOperation extends AbstractExpression implements ConditionalExpre
         if (boolVal == null) return null;
         return boolVal ? Literal.TRUE : Literal.FALSE;
     }
+
+    public ConditionalExpression getInner() {
+        return inner;
+    }
 }
