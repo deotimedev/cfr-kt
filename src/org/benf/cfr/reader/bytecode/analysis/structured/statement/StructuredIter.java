@@ -20,6 +20,15 @@ import java.util.List;
 public class StructuredIter extends AbstractStructuredBlockStatement {
     private final BlockIdentifier block;
     private LValue iterator;
+
+    public LValue getIterator() {
+        return iterator;
+    }
+
+    public Expression getList() {
+        return list;
+    }
+
     private Expression list;
 
     StructuredIter(BytecodeLoc loc, BlockIdentifier block, LValue iterator, Expression list, Op04StructuredStatement body) {
