@@ -219,4 +219,15 @@ public class StructuredFor extends AbstractStructuredBlockStatement {
         return true;
     }
 
+    public ConditionalExpression getCondition() {
+        return condition;
+    }
+
+    public AssignmentSimple getInitial() {
+        return initial;
+    }
+
+    public List<AbstractAssignmentExpression> getAssignments() {
+        return assignments;
+    }
 }
