@@ -17,6 +17,11 @@ import org.benf.cfr.reader.util.output.Dumper;
  */
 public class ArithmeticPostMutationOperation extends AbstractMutatingAssignmentExpression {
     private LValue mutated;
+
+    public ArithOp getOp() {
+        return op;
+    }
+
     private final ArithOp op;
 
     public ArithmeticPostMutationOperation(BytecodeLoc loc, LValue mutated, ArithOp op) {
