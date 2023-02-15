@@ -58,9 +58,8 @@ public class CfrDriverImpl implements CfrDriver {
                 new SinkDumperFactory(outputSinkFactory, options) :
                 new InternalDumperFactoryImpl(options);
 
-        Driver.doClass(dcCommonState, toAnalyse, false, dumperFactory);
+        Driver.doJar(dcCommonState, toAnalyse, AnalysisType.JAR, dumperFactory);
 
-        dcCommonState.getClassFileOrNull()
         return dcCommonState;
     }
 }
