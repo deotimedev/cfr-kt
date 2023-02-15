@@ -2,6 +2,7 @@ package org.benf.cfr.reader.api;
 
 import org.benf.cfr.reader.CfrDriverImpl;
 import org.benf.cfr.reader.entities.ClassFile;
+import org.benf.cfr.reader.state.DCCommonState;
 import org.benf.cfr.reader.util.getopt.Options;
 import org.benf.cfr.reader.util.getopt.OptionsImpl;
 
@@ -20,7 +21,7 @@ public interface CfrDriver {
      *
      * @param toAnalyse list of class file FQN / path of jar / path of class file
      */
-    Optional<ClassFile> analyse(String toAnalyse);
+    DCCommonState analyse(String toAnalyse);
 
     /**
      * Builder for {@link CfrDriver}

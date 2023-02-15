@@ -47,7 +47,7 @@ public class CfrDriverImpl implements CfrDriver {
     }
 
     @Override
-    public Optional<ClassFile> analyse(String toAnalyse) {
+    public DCCommonState analyse(String toAnalyse) {
 
         // TODO : We shouldn't have to discard state here.  But we do, because
         // it causes test fails.  (used class name table retains useful symbols).
@@ -58,6 +58,9 @@ public class CfrDriverImpl implements CfrDriver {
                 new SinkDumperFactory(outputSinkFactory, options) :
                 new InternalDumperFactoryImpl(options);
 
-        return Driver.doClass(dcCommonState, toAnalyse, false, dumperFactory);
+        Driver.doClass(dcCommonState, toAnalyse, false, dumperFactory);
+
+        dcCommonState.getClassFileOrNull()
+        return dcCommonState;
     }
 }
