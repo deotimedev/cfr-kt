@@ -23,6 +23,7 @@ import org.benf.cfr.reader.util.functors.UnaryFunction;
 import org.benf.cfr.reader.util.getopt.Options;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -196,6 +197,12 @@ public class DCCommonState {
         String path = classInfo.getRawName();
         path = ClassNameUtils.convertToPath(path) + ".class";
         return getClassFile(path);
+    }
+
+    public byte[] getClassContent(JavaTypeInstance classInfo) throws IOException {
+        String path = classInfo.getRawName();
+        path = ClassNameUtils.convertToPath(path) + ".class";
+        return classFileSource.getClassFileContent(path).getFirst();
     }
 
     public ClassFile getClassFileOrNull(JavaTypeInstance classInfo) {
