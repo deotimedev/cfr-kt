@@ -1,6 +1,8 @@
 package org.benf.cfr.reader.api;
 
 import org.benf.cfr.reader.CfrDriverImpl;
+import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
+import org.benf.cfr.reader.bytecode.analysis.types.JavaTypeInstance;
 import org.benf.cfr.reader.entities.ClassFile;
 import org.benf.cfr.reader.state.DCCommonState;
 import org.benf.cfr.reader.util.getopt.Options;
@@ -21,7 +23,7 @@ public interface CfrDriver {
      *
      * @param toAnalyse list of class file FQN / path of jar / path of class file
      */
-    DCCommonState analyse(String toAnalyse);
+    Pair<DCCommonState, Map<Integer, List<JavaTypeInstance>>> analyse(String toAnalyse);
 
     /**
      * Builder for {@link CfrDriver}

@@ -89,7 +89,7 @@ class Driver {
         }
     }
 
-    static void doJar(DCCommonState dcCommonState, String path, AnalysisType analysisType, DumperFactory dumperFactory) {
+    static Map<Integer, List<JavaTypeInstance>> doJar(DCCommonState dcCommonState, String path, AnalysisType analysisType, DumperFactory dumperFactory) {
         Options options = dcCommonState.getOptions();
         IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory.get(options);
         ObfuscationMapping mapping = MappingFactory.get(options, dcCommonState);
@@ -107,14 +107,15 @@ class Driver {
             List<Integer> versionsSeen = ListFactory.newList();
             
             addMissingOuters(clstypes);
-            
-            for (Map.Entry<Integer, List<JavaTypeInstance>> entry : clstypes.entrySet()) {
-                int forVersion = entry.getKey();
-                versionsSeen.add(forVersion);
-                List<Integer> localVersionsSeen = ListFactory.newList(versionsSeen);
-                List<JavaTypeInstance> types = entry.getValue();
-                doJarVersionTypes(forVersion, localVersionsSeen, dcCommonState, dumperFactory, illegalIdentifierDump, summaryDumper, progressDumper, types);
-            }
+
+            return clstypes;
+//            for (Map.Entry<Integer, List<JavaTypeInstance>> entry : clstypes.entrySet()) {
+//                int forVersion = entry.getKey();
+//                versionsSeen.add(forVersion);
+//                List<Integer> localVersionsSeen = ListFactory.newList(versionsSeen);
+//                List<JavaTypeInstance> types = entry.getValue();
+//                doJarVersionTypes(forVersion, localVersionsSeen, dcCommonState, dumperFactory, illegalIdentifierDump, summaryDumper, progressDumper, types);
+//            }
         } catch (Exception e) {
             dumperFactory.getExceptionDumper().noteException(path, "Exception analysing jar", e);
             if (summaryDumper != null) summaryDumper.notify("Exception analysing jar " + e);
@@ -123,6 +124,7 @@ class Driver {
                 summaryDumper.close();
             }
         }
+        return null;
     }
 
     /*
@@ -212,47 +214,47 @@ class Driver {
          * If we're working on a case insensitive file system (OH COME ON!) then make sure that
          * we don't have any collisions.
          */
-        for (JavaTypeInstance type : types) {
-            Dumper d = new ToStringDumper();  // Sentinel dumper.
-            try {
-                ClassFile c = dcCommonState.getClassFile(type);
-                // Don't explicitly dump inner classes.  But make sure we ask the CLASS if it's
-                // an inner class, rather than using the name, as scala tends to abuse '$'.
-                if (c.isInnerClass()) {
-                    d = null;
-                    continue;
-                }
-                if (!silent) {
-                    type = dcCommonState.getObfuscationMapping().get(type);
-                    progressDumper.analysingType(type);
-                }
-                if (options.getOption(OptionsImpl.DECOMPILE_INNER_CLASSES)) {
-                    c.loadInnerClasses(dcCommonState);
-                }
-
-                TypeUsageCollectingDumper collectingDumper = new TypeUsageCollectingDumper(options, c);
-                c.analyseTop(dcCommonState, collectingDumper);
-
-                JavaTypeInstance classType = c.getClassType();
-                classType = dcCommonState.getObfuscationMapping().get(classType);
-                TypeUsageInformation typeUsageInformation = collectingDumper.getRealTypeUsageInformation();
-                d = dumperFactory.getNewTopLevelDumper(classType, summaryDumper, typeUsageInformation, illegalIdentifierDump);
-                d = dcCommonState.getObfuscationMapping().wrap(d);
-
-                c.dump(d);
-                d.newln();
-                d.newln();
-                if (lomem) {
-                    c.releaseCode();
-                }
-            } catch (Dumper.CannotCreate e) {
-                throw e;
-            } catch (RuntimeException e) {
-                d.print(e.toString()).newln().newln().newln();
-            } finally {
-                if (d != null) d.close();
-            }
-
-        }
+//        for (JavaTypeInstance type : types) {
+//            Dumper d = new ToStringDumper();  // Sentinel dumper.
+//            try {
+//                ClassFile c = dcCommonState.getClassFile(type);
+//                // Don't explicitly dump inner classes.  But make sure we ask the CLASS if it's
+//                // an inner class, rather than using the name, as scala tends to abuse '$'.
+//                if (c.isInnerClass()) {
+//                    d = null;
+//                    continue;
+//                }
+//                if (!silent) {
+//                    type = dcCommonState.getObfuscationMapping().get(type);
+//                    progressDumper.analysingType(type);
+//                }
+//                if (options.getOption(OptionsImpl.DECOMPILE_INNER_CLASSES)) {
+//                    c.loadInnerClasses(dcCommonState);
+//                }
+//
+//                TypeUsageCollectingDumper collectingDumper = new TypeUsageCollectingDumper(options, c);
+//                c.analyseTop(dcCommonState, collectingDumper);
+//
+//                JavaTypeInstance classType = c.getClassType();
+//                classType = dcCommonState.getObfuscationMapping().get(classType);
+//                TypeUsageInformation typeUsageInformation = collectingDumper.getRealTypeUsageInformation();
+//                d = dumperFactory.getNewTopLevelDumper(classType, summaryDumper, typeUsageInformation, illegalIdentifierDump);
+//                d = dcCommonState.getObfuscationMapping().wrap(d);
+//
+//                c.dump(d);
+//                d.newln();
+//                d.newln();
+//                if (lomem) {
+//                    c.releaseCode();
+//                }
+//            } catch (Dumper.CannotCreate e) {
+//                throw e;
+//            } catch (RuntimeException e) {
+//                d.print(e.toString()).newln().newln().newln();
+//            } finally {
+//                if (d != null) d.close();
+//            }
+//
+//        }
     }
 }

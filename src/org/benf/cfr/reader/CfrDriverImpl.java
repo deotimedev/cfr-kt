@@ -4,6 +4,8 @@ import org.benf.cfr.reader.api.CfrDriver;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.api.OutputSinkFactory;
 import org.benf.cfr.reader.apiunreleased.ClassFileSource2;
+import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
+import org.benf.cfr.reader.bytecode.analysis.types.JavaTypeInstance;
 import org.benf.cfr.reader.entities.ClassFile;
 import org.benf.cfr.reader.state.ClassFileSourceChained;
 import org.benf.cfr.reader.state.ClassFileSourceImpl;
@@ -21,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class CfrDriverImpl implements CfrDriver {
@@ -47,7 +50,7 @@ public class CfrDriverImpl implements CfrDriver {
     }
 
     @Override
-    public DCCommonState analyse(String toAnalyse) {
+    public Pair<DCCommonState, Map<Integer, List<JavaTypeInstance>>> analyse(String toAnalyse) {
 
         // TODO : We shouldn't have to discard state here.  But we do, because
         // it causes test fails.  (used class name table retains useful symbols).
@@ -58,8 +61,7 @@ public class CfrDriverImpl implements CfrDriver {
                 new SinkDumperFactory(outputSinkFactory, options) :
                 new InternalDumperFactoryImpl(options);
 
-        Driver.doJar(dcCommonState, toAnalyse, AnalysisType.JAR, dumperFactory);
 
-        return dcCommonState;
+        return Pair.make(dcCommonState, Driver.doJar(dcCommonState, toAnalyse, AnalysisType.JAR, dumperFactory));
     }
 }

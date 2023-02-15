@@ -163,7 +163,7 @@ public class DCCommonState {
                         version = Integer.parseInt(ver);
                         classPath = matcher.group(2);
                     } catch (Exception e) {
-                        // This is unfortunate - someone's playing silly buggers!
+                        // This is unfortunate - someone's playing silly buggers! .
                         // Ignore this file - it won't get seen by jre.
                         // (should also be impossible to get here given regex).
                         continue;
